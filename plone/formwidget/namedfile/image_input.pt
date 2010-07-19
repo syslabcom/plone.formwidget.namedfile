@@ -26,7 +26,8 @@
                 exists python: view.value is not None;
                 action view/action;
                 allow_nochange view/allow_nochange;">
-    <span tal:condition="python:exists and download_url and action=='nochange'">
+    <!--span tal:condition="python:exists and download_url and action=='nochange'"-->
+    <span tal:condition="python:exists and download_url">
         <img
             tal:attributes="src download_url;
                             width view/thumb_width"
