@@ -33,10 +33,6 @@ class NamedFileWidget(Explicit, file.FileWidget):
     
     @property
     def allow_nochange(self):
-        #return not self.ignoreContext and \
-        #           self.field is not None and \
-        #           self.value is not None and \
-        #           self.value != self.field.missing_value
         allow_nochange = self.field is not None and \
                          self.value is not None and \
                          self.value != self.field.missing_value
@@ -84,8 +80,6 @@ class NamedFileWidget(Explicit, file.FileWidget):
     
     def extract(self, default=NOVALUE):
         action = self.request.get("%s.action" % self.name, None)
-        #self.request["%s.action" % self.name] = 'nochange' #DEBUG
-        #self.request["%s.action" % self.name] = '' #DEBUG
         
         if action == 'remove':
             return None
@@ -98,7 +92,6 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return dm.get()
 
         # empty unnamed FileUploads should not count as a value
-        #value = super(NamedFileWidget, self).extract(default)
         if isinstance(value, FileUpload):
             value.seek(0, SEEK_END)
             empty = value.tell()==0
