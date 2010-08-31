@@ -30,14 +30,14 @@ class NamedFileWidget(Explicit, file.FileWidget):
 
     klass = u'named-file-widget'
     value = None # don't default to a string
-    
+
     @property
     def allow_nochange(self):
         allow_nochange = self.field is not None and \
                          self.value is not None and \
                          self.value != self.field.missing_value
         return allow_nochange
-    
+
     @property
     def filename(self):
         if self.field is not None and self.value == self.field.missing_value:
@@ -48,14 +48,14 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return safe_basename(self.value.filename)
         else:
             return None
-    
+
     @property
     def file_size(self):
         if INamed.providedBy(self.value):
             return self.value.getSize() / 1024
         else:
             return 0
-    
+
     @property
     def filename_encoded(self):
         filename = self.filename
@@ -74,16 +74,16 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
         else:
             return "%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__)
-    
+
     def action(self):
         return self.request.get("%s.action" % self.name, "nochange")
-    
+
     def extract(self, default=NOVALUE):
         action = self.request.get("%s.action" % self.name, None)
-        
+
         if action == 'remove':
             return None
-        
+
         value = super(NamedFileWidget, self).extract(default)
         if action == 'nochange' and value == NOVALUE:
             if self.form.ignoreContext:
@@ -143,28 +143,28 @@ class NamedImageWidget(NamedFileWidget):
         return self.title
 
 class Download(BrowserView):
-    """Download a file, via ../context/form/++widget++/@@download/filename    
+    """Download a file, via ../context/form/++widget++/@@download/filename
     """
-    
+
     implements(IPublishTraverse)
-    
+
     def __init__(self, context, request):
         super(BrowserView, self).__init__(context, request)
         self.filename = None
-        
+
     def publishTraverse(self, request, name):
-        
+
         if self.filename is None: # ../@@download/filename
             self.filename = name
         else:
             raise NotFound(self, name, request)
-        
+
         return self
-    
+
     def __call__(self):
-        
+
         # TODO: Security check on form view/widget
-        
+
         if self.context.value != self.context.field.missing_value:
             file_ = self.context.value
         elif self.context.ignoreContext:
@@ -172,16 +172,16 @@ class Download(BrowserView):
         else:
             context = aq_inner(self.context.context)
             field = aq_inner(self.context.field)
-            
+
             dm = getMultiAdapter((context, field,), IDataManager)
             file_ = dm.get()
-        
+
         if file_ is None:
             raise NotFound(self, self.filename, self.request)
-        
+
         if not self.filename:
             self.filename = getattr(file_, 'filename', None)
-        
+
         set_headers(file_, self.request.response, filename=self.filename)
         return stream_data(file_)
 
