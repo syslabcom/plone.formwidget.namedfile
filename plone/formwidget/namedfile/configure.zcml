@@ -17,7 +17,7 @@
             interface=".interfaces.INamedFileWidget"
         />
     </class>
-    
+
     <class class=".widget.NamedImageWidget">
         <require
             permission="zope.Public"
@@ -34,7 +34,7 @@
         layer="z3c.form.interfaces.IFormLayer"
         template="file_display.pt"
         />
-    
+
     <z3c:widgetTemplate
         mode="display"
         widget=".interfaces.INamedImageWidget"

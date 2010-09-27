@@ -33,11 +33,11 @@ class NamedFileWidget(Explicit, file.FileWidget):
 
     @property
     def allow_nochange(self):
-        allow_nochange = self.field is not None and \
-                         self.value is not None and \
-                         self.value != self.field.missing_value
-        return allow_nochange
-
+        return not self.ignoreContext and \
+                   self.field is not None and \
+                   self.value is not None and \
+                   self.value != self.field.missing_value
+    
     @property
     def filename(self):
         if self.field is not None and self.value == self.field.missing_value:
@@ -68,7 +68,7 @@ class NamedFileWidget(Explicit, file.FileWidget):
     def download_url(self):
         if self.field is None:
             return None
-        if self.ignoreContext and self.value == self.field.missing_value:
+        if self.ignoreContext:
             return None
         if self.filename_encoded:
             return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
@@ -84,9 +84,11 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return None
         elif action == 'nochange':
             if self.ignoreContext:
-                return super(NamedFileWidget, self).extract(default)
+                # For drafts to work return request.form value (if exists)...
+                return default
             dm = getMultiAdapter((self.context, self.field,), IDataManager)
-            return dm.get()
+            # For sub-widgets to function
+            return dm.query(default)
 
         # empty unnamed FileUploads should not count as a value
         value = super(NamedFileWidget, self).extract(default)
@@ -162,18 +164,15 @@ class Download(BrowserView):
     def __call__(self):
 
         # TODO: Security check on form view/widget
-
-        if self.context.value != self.context.field.missing_value:
-            file_ = self.context.value
-        elif self.context.ignoreContext:
+        
+        if self.context.ignoreContext:
             raise NotFound("Cannot get the data file from a widget with no context")
-        else:
-            context = aq_inner(self.context.context)
-            field = aq_inner(self.context.field)
-
-            dm = getMultiAdapter((context, field,), IDataManager)
-            file_ = dm.get()
-
+        
+        context = aq_inner(self.context.context)
+        field = aq_inner(self.context.field)
+        
+        dm = getMultiAdapter((context, field,), IDataManager)
+        file_ = dm.get()
         if file_ is None:
             raise NotFound(self, self.filename, self.request)
 

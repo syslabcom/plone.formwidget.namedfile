@@ -18,30 +18,30 @@ class NamedDataConverter(BaseDataConverter):
         return value
 
     def toFieldValue(self, value):
-        
+
         if value is None or value == '':
             return self.field.missing_value
 
         if INamed.providedBy(value):
             return value
         elif isinstance(value, FileUpload):
-            
+
             headers = value.headers
             filename = safe_basename(value.filename)
-            
+
             if filename is not None:
                 filename = unicode(filename)
-            
+
             contentType = 'application/octet-stream'
             if headers:
                 contentType = headers.get('Content-Type', contentType)
-            
+
             value.seek(0)
             data = value.read()
             if data or filename:
                 return self.field._type(data=data, contentType=contentType, filename=filename)
             else:
                 return self.field.missing_value
-        
+
         else:
             return self.field._type(data=str(value))
