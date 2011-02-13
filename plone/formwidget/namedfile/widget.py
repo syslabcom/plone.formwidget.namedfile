@@ -37,7 +37,7 @@ class NamedFileWidget(Explicit, file.FileWidget):
                    self.field is not None and \
                    self.value is not None and \
                    self.value != self.field.missing_value
-    
+
     @property
     def filename(self):
         if self.field is not None and self.value == self.field.missing_value:
@@ -71,9 +71,9 @@ class NamedFileWidget(Explicit, file.FileWidget):
         if self.ignoreContext:
             return None
         if self.filename_encoded:
-            return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
+            return urllib.quote("%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded))
         else:
-            return "%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__)
+            return urllib.quote("%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__))
 
     def action(self):
         return self.request.get("%s.action" % self.name, "nochange")
@@ -164,13 +164,13 @@ class Download(BrowserView):
     def __call__(self):
 
         # TODO: Security check on form view/widget
-        
+
         if self.context.ignoreContext:
             raise NotFound("Cannot get the data file from a widget with no context")
-        
+
         context = aq_inner(self.context.context)
         field = aq_inner(self.context.field)
-        
+
         dm = getMultiAdapter((context, field,), IDataManager)
         file_ = dm.get()
         if file_ is None:
