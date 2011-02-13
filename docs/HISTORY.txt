@@ -1,17 +1,41 @@
 Changelog
 =========
 
-1.0b7 (unreleased)
+1.0b9 (2011-02-11)
 ------------------
 
-* ...
+* Fix handling of unicode filenames when converting or quoting the URL.
+  Fixes http://code.google.com/p/dexterity/issues/detail?id=148
+  [rossp, mj]
+
+* Added Spanish translations.
+  [dukebody]
+
+* Added german translations.
+  [jbaumann]
 
 
+1.0b8 (2010-10-01)
+------------------
+
+* Avoid showing validation errors during KSS validation, as the file is not
+  uploaded in this case.
+  [davisagli]
+
+* Don't use the action from the request when the form submission succeeded.
+  (In that case we always want "keep existing image")
+  [davisagli]
+
+1.0b7 (2010-08-05)
+------------------
+
+* Fix Wichert's previous fix to check ignoreContext the correct way.
+  [davisagli]
 
 1.0b6 (2010-05-17)
 ------------------
 
-* Do not query the datamanager if we should ignore the context. Fixes 
+* Do not query the datamanager if we should ignore the context. Fixes
   http://code.google.com/p/dexterity/issues/detail?id=120
   [wichert]
 
@@ -28,7 +52,7 @@ Changelog
   which action to take.
   [wichert]
 
-* Disabled state was being applied to the wrong tag (span instead of the 
+* Disabled state was being applied to the wrong tag (span instead of the
   input) for images and files, and we're not using tabindex anymore.
   [limi]
 

@@ -62,6 +62,8 @@ class NamedFileWidget(Explicit, file.FileWidget):
         if filename is None:
             return None
         else:
+            if isinstance(filename, unicode):
+                filename = filename.encode('utf-8')
             return urllib.quote_plus(filename)
 
     @property
@@ -71,15 +73,22 @@ class NamedFileWidget(Explicit, file.FileWidget):
         if self.ignoreContext:
             return None
         if self.filename_encoded:
-            return urllib.quote("%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded))
+            return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
         else:
-            return urllib.quote("%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__))
-
+            return "%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__)
+    
     def action(self):
-        return self.request.get("%s.action" % self.name, "nochange")
-
+        action = self.request.get("%s.action" % self.name, "nochange")
+        if hasattr(self.form, 'successMessage') and self.form.status == self.form.successMessage:
+            # if form action completed successfully, we want nochange
+            action = 'nochange'
+        return action
+    
     def extract(self, default=NOVALUE):
         action = self.request.get("%s.action" % self.name, None)
+        if self.request.get('PATH_INFO', '').endswith('kss_z3cform_inline_validation'):
+            action = 'nochange'
+        
         if action == 'remove':
             return None
         elif action == 'nochange':

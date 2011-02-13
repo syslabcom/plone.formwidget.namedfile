@@ -233,10 +233,12 @@ At first, there is no value, so the behaviour is much like before:
   </span>
 
 However, if we now set a value, we will have the option of keeping it,
-or changing it.
+or changing it.  The filename can handle unicode and international
+characters.
 
   >>> from plone.namedfile import NamedFile, NamedImage
-  >>> file_widget.value = NamedFile(data='My file data', filename='data.txt')
+  >>> file_widget.value = NamedFile(data='My file data',
+  ...                               filename=unicode('data_深.txt', 'utf-8'))
   >>> image_widget.value = NamedImage(data='My image data', filename='faux.png')
 
   >>> file_widget.update()
@@ -244,7 +246,7 @@ or changing it.
   <span class="named-file-widget required namedfile-field"
         id="widget.id.file">
       <span>
-          <a href="http://127.0.0.1/++widget++file_field/@@download/data.txt">data.txt</a>
+          <a href="http://127.0.0.1/++widget++file_field/@@download/data_%E6%B7%B1.txt">data_深.txt</a>
           <span class="discreet"> &mdash;
               0 KB
           </span>
@@ -468,15 +470,17 @@ A data string is converted to the appropriate type:
   <plone.namedfile.file.NamedImage object at ...>
 
 A FileUpload object is converted to the appropriate type, preserving filename
-and content type.
+and content type, and possibly handling international characters in filenames.
 
   >>> myfile = cStringIO.StringIO('File upload contents.')
-  >>> aFieldStorage = FieldStorageStub(myfile, filename='random.txt', headers={'Content-Type': 'text/x-dummy'})
+  >>> # \xc3\xb8 is UTF-8 for a small letter o with slash
+  >>> aFieldStorage = FieldStorageStub(myfile, filename='rand\xc3\xb8m.txt',
+  ...     headers={'Content-Type': 'text/x-dummy'})
   >>> file_obj = file_converter.toFieldValue(FileUpload(aFieldStorage))
   >>> file_obj.data
   'File upload contents.'
   >>> file_obj.filename
-  u'random.txt'
+  u'rand\xf8m.txt'
   >>> file_obj.contentType
   'text/x-dummy'
 

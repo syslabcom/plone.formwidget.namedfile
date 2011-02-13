@@ -28,10 +28,12 @@ class NamedDataConverter(BaseDataConverter):
 
             headers = value.headers
             filename = safe_basename(value.filename)
-
-            if filename is not None:
-                filename = unicode(filename)
-
+            
+            if filename is not None and not isinstance(filename, unicode):
+                # Work-around for
+                # https://bugs.launchpad.net/zope2/+bug/499696
+                filename = filename.decode('utf-8')
+            
             contentType = 'application/octet-stream'
             if headers:
                 contentType = headers.get('Content-Type', contentType)
