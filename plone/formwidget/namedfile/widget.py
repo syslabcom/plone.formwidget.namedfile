@@ -76,27 +76,26 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
         else:
             return "%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__)
-    
+
     def action(self):
         action = self.request.get("%s.action" % self.name, "nochange")
         if hasattr(self.form, 'successMessage') and self.form.status == self.form.successMessage:
             # if form action completed successfully, we want nochange
             action = 'nochange'
         return action
-    
+
     def extract(self, default=NOVALUE):
         action = self.request.get("%s.action" % self.name, None)
         if self.request.get('PATH_INFO', '').endswith('kss_z3cform_inline_validation'):
             action = 'nochange'
-        
+
         if action == 'remove':
             return None
         elif action == 'nochange':
             if self.ignoreContext:
-                # For drafts to work return request.form value (if exists)...
                 return default
             dm = getMultiAdapter((self.context, self.field,), IDataManager)
-            # For sub-widgets to function
+            # For sub-widgets to function use a query() not get()
             return dm.query(default)
 
         # empty unnamed FileUploads should not count as a value
