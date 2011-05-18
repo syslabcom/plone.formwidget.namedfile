@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/plone/!svn/ver/49606/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile
+END
+file_input.pt
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/plone/!svn/ver/35824/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/file_input.pt
+END
+widget.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/plone/!svn/ver/49606/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/widget.txt
+END
+image_input.pt
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/plone/!svn/ver/35824/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/image_input.pt
+END
+configure.zcml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/plone/!svn/ver/45799/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/configure.zcml
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/plone/!svn/ver/29693/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/__init__.py
+END
+file_display.pt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/plone/!svn/ver/48713/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/file_display.pt
+END
+image_display.pt
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/plone/!svn/ver/25870/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/image_display.pt
+END
+tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/plone/!svn/ver/25870/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/tests.py
+END
+interfaces.py
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/plone/!svn/ver/25957/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/interfaces.py
+END
+widget.py
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/plone/!svn/ver/48540/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/widget.py
+END
+validator.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/plone/!svn/ver/35824/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/validator.py
+END
+converter.py
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/plone/!svn/ver/46983/plone.formwidget.namedfile/trunk/plone/formwidget/namedfile/converter.py
+END
