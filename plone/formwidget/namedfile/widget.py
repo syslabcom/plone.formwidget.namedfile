@@ -30,14 +30,14 @@ class NamedFileWidget(Explicit, file.FileWidget):
 
     klass = u'named-file-widget'
     value = None # don't default to a string
-
+    
     @property
     def allow_nochange(self):
         return not self.ignoreContext and \
                    self.field is not None and \
                    self.value is not None and \
                    self.value != self.field.missing_value
-
+    
     @property
     def filename(self):
         if self.field is not None and self.value == self.field.missing_value:
@@ -48,14 +48,14 @@ class NamedFileWidget(Explicit, file.FileWidget):
             return safe_basename(self.value.filename)
         else:
             return None
-
+    
     @property
     def file_size(self):
         if INamed.providedBy(self.value):
             return self.value.getSize() / 1024
         else:
             return 0
-
+    
     @property
     def filename_encoded(self):
         filename = self.filename
@@ -73,22 +73,33 @@ class NamedFileWidget(Explicit, file.FileWidget):
         if self.ignoreContext:
             return None
         if self.filename_encoded:
-            return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self.field.__name__, self.filename_encoded)
+            return "%s/++widget++%s/@@download/%s" % (self.request.getURL(), self._widget_name(), self.filename_encoded)
         else:
-            return "%s/++widget++%s/@@download" % (self.request.getURL(), self.field.__name__)
+            return "%s/++widget++%s/@@download" % (self.request.getURL(), self._widget_name())
 
+    def _widget_name(self):
+        # self has the fully qualified name, including 'form.widgets.'
+        # Search one level up to find the shorter form
+        if getattr(self, '__parent__', None) is None:
+            return self.field.getName()
+
+        possible_names = [k for k,v in self.__parent__.items() if v is self]
+        if len(possible_names) != 1:
+            raise ValueError("Didn't find a single possible widget, found %d" % len(possible_names))
+        return possible_names[0]
+    
     def action(self):
         action = self.request.get("%s.action" % self.name, "nochange")
         if hasattr(self.form, 'successMessage') and self.form.status == self.form.successMessage:
             # if form action completed successfully, we want nochange
             action = 'nochange'
         return action
-
+    
     def extract(self, default=NOVALUE):
         action = self.request.get("%s.action" % self.name, None)
         if self.request.get('PATH_INFO', '').endswith('kss_z3cform_inline_validation'):
             action = 'nochange'
-
+        
         if action == 'remove':
             return None
         elif action == 'nochange':
